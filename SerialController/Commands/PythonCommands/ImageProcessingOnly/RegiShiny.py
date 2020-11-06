@@ -41,7 +41,7 @@ class RegiShiny(ImageProcPythonCommand):
             self.press(Button.X, wait=0.38)
             self.press(Button.A, wait=5)
             self.press(Button.A, wait=1.5)
-            self.press(Button.A, wait=14.)
+            self.press(Button.A, wait=16.)
             self.press(Button.A, wait=5.)
             counter += 1
 
