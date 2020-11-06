@@ -2,6 +2,8 @@ import os
 from os.path import join, relpath
 from glob import glob
 import inspect, importlib
+import slackweb
+
 
 def ospath(path):
 	return path.replace('/', os.sep)
@@ -32,3 +34,8 @@ def importAllModules(base_path, mod_names=None):
 		modules.append(importlib.import_module(name))
 	
 	return modules
+
+def sendToSlack(text):
+	url = os.getenv("SLACK_WEBHOOK_URL")
+	slack = slackweb.Slack(url=url)
+	slack.notify(text=text)

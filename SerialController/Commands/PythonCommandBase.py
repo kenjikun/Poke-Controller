@@ -189,6 +189,26 @@ class ImageProcPythonCommand(PythonCommand):
 		else:
 			return False
 
+	def mostSimilarTemplate(self, template_path_list, use_gray=True, show_value=True):
+		src = self.camera.readFrame()
+		src = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY) if use_gray else src
+		max_vals = []
+
+		for template_path in template_path_list:
+			template = cv2.imread(TEMPLATE_PATH + template_path, cv2.IMREAD_GRAYSCALE if use_gray else cv2.IMREAD_COLOR)
+			w, h = template.shape[1], template.shape[0]
+
+			method = cv2.TM_CCOEFF_NORMED
+			res = cv2.matchTemplate(src, template, method)
+			_, max_val, _, max_loc = cv2.minMaxLoc(res)
+			max_vals.append(max_val)
+
+		if show_value:
+			print(list(zip(template_path_list, max_vals)))
+
+		return max_vals.index(max(max_vals))
+
+
 	# Get interframe difference binarized image
 	# フレーム間差分により2値化された画像を取得
 	def getInterframeDiff(self, frame1, frame2, frame3, threshold):
