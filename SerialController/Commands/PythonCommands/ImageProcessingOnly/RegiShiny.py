@@ -14,7 +14,7 @@ class RegiSeries(Enum):
 
 class RegiShiny(ImageProcPythonCommand):
     regi_series = None
-    template_file_paths = []
+    template_file_path = ""
 
     def __init__(self, cam):
         super().__init__(cam)
@@ -41,24 +41,21 @@ class RegiShiny(ImageProcPythonCommand):
             self.press(Button.X, wait=0.38)
             self.press(Button.A, wait=5)
             self.press(Button.A, wait=1.5)
-            self.press(Button.A, wait=14.)
+            self.press(Button.A, wait=16.)
             self.press(Button.A, wait=5.)
             counter += 1
 
     def is_shiny(self, counter):
-        index = self.mostSimilarTemplate(self.template_file_paths, show_value=True, use_gray=False)
-        if index == 1:
-            sendToSlack("shiny!")
-            return True
-        print("not shiny")
+        # 通常色である場合にFalseを返す
+        if self.isContainTemplate(self.template_file_path, threshold=0.7, show_value=True, use_gray=False):
+            print("not shiny")
+            return False
         return False
-
-
 
 class RegielekiShiny(RegiShiny):
     NAME = 'レジエレキ/ドラゴ色厳選'
     regi_series = RegiSeries.REGIELEKI
-    template_file_paths = ['regieleki_normal.png', 'regieleki_shiny.png']
+    template_file_path = 'regieleki_normal.png'
     def __init__(self, cam):
         super().__init__(cam)
 
